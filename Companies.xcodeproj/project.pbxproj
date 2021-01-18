@@ -14,6 +14,8 @@
 		0A35F93E252E384A00DE775E /* Companies.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A35F93C252E384A00DE775E /* Companies.xcdatamodeld */; };
 		0A35F940252E384C00DE775E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A35F93F252E384C00DE775E /* Assets.xcassets */; };
 		0A35F943252E384C00DE775E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A35F941252E384C00DE775E /* LaunchScreen.storyboard */; };
+		0A847D3A25B5B5BB002CE3C8 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A847D3925B5B5BB002CE3C8 /* CustomNavigationController.swift */; };
+		0A847D3E25B5D002002CE3C8 /* UIColor+theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A847D3D25B5D002002CE3C8 /* UIColor+theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		0A35F93F252E384C00DE775E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0A35F942252E384C00DE775E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A35F944252E384C00DE775E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A847D3925B5B5BB002CE3C8 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
+		0A847D3D25B5D002002CE3C8 /* UIColor+theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+theme.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,11 +65,13 @@
 				0A35F933252E384A00DE775E /* AppDelegate.swift */,
 				0A35F935252E384A00DE775E /* SceneDelegate.swift */,
 				0A35F937252E384A00DE775E /* ViewController.swift */,
+				0A847D3925B5B5BB002CE3C8 /* CustomNavigationController.swift */,
 				0A35F939252E384A00DE775E /* Main.storyboard */,
 				0A35F93F252E384C00DE775E /* Assets.xcassets */,
 				0A35F941252E384C00DE775E /* LaunchScreen.storyboard */,
 				0A35F944252E384C00DE775E /* Info.plist */,
 				0A35F93C252E384A00DE775E /* Companies.xcdatamodeld */,
+				0A847D3D25B5D002002CE3C8 /* UIColor+theme.swift */,
 			);
 			path = Companies;
 			sourceTree = "<group>";
@@ -141,7 +147,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A35F938252E384A00DE775E /* ViewController.swift in Sources */,
+				0A847D3A25B5B5BB002CE3C8 /* CustomNavigationController.swift in Sources */,
 				0A35F93E252E384A00DE775E /* Companies.xcdatamodeld in Sources */,
+				0A847D3E25B5D002002CE3C8 /* UIColor+theme.swift in Sources */,
 				0A35F934252E384A00DE775E /* AppDelegate.swift in Sources */,
 				0A35F936252E384A00DE775E /* SceneDelegate.swift in Sources */,
 			);
