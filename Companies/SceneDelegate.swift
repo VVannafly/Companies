@@ -17,6 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        setupNavigationStyle()
+        
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.rootViewController = createNC()
         window?.windowScene = windowScene
@@ -24,8 +26,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     }
 
+    func setupNavigationStyle() {
+        UINavigationBar.appearance().prefersLargeTitles = true
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .systemRed
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().barTintColor = .systemRed
+        UINavigationBar.appearance().tintColor = .white
+        UINavigationBar.appearance().isTranslucent = false
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     func createNC() -> UINavigationController {
-        let companiesController = ViewController()
+        let companiesController = CompaniesController()
         return CustomNavigationController(rootViewController: companiesController)
     }
     
