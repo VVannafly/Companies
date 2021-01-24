@@ -6,24 +6,46 @@
 //
 
 import UIKit
+import CoreData
 
 class CompaniesController: UITableViewController {
-
-    let companies = [
-        Company(name: "Apple", founded: Date()),
-        Company(name: "Google", founded: Date()),
-        Company(name: "Facebook", founded: Date())
-    ]
+        var companies = [Company]()
+//    var companies = [
+//        Company(name: "Apple", founded: Date()),
+//        Company(name: "Google", founded: Date()),
+//        Company(name: "Facebook", founded: Date())
+//    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        fetchCompanies()
         view.backgroundColor = .white
         
         navigationItem.title = "Companies"
         setUpTableView()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "plus"), style: .plain, target: self, action: #selector(handleAddCompany))
 //        setupNavigationStyle()
+    }
+    
+    private func fetchCompanies() {
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<Company>(entityName: "Company")
+        do {
+            let companies = try context.fetch(fetchRequest)
+            companies.forEach { (company) in
+                print(company.name ?? "")
+            }
+            
+            self.companies = companies
+            self.tableView.reloadData()
+            
+        } catch let error {
+            print("Failed to fetch companies:", error)
+        }
+        
+        
     }
     
     @objc func handleAddCompany() {
@@ -33,6 +55,7 @@ class CompaniesController: UITableViewController {
         
         
         let navController = CustomNavigationController(rootViewController: createCompanyController)
+        createCompanyController.delegate = self
         present(navController, animated: true)
     }
 
@@ -65,8 +88,14 @@ class CompaniesController: UITableViewController {
         tableView.tableFooterView = UIView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
     }
-    
+}
 
-    
+extension CompaniesController: CreateCompanyControllerDelegate {
+    func didAddCompany(company: Company) {
+        // 1 - modify your array
+        companies.append(company)
+        // 2 - insert a new indexpath into tableVIew
+        tableView.insertRows(at: [IndexPath(row: companies.count - 1, section: 0)], with: .automatic)
+    }
 }
 
