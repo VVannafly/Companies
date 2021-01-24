@@ -28,6 +28,42 @@ class CompaniesController: UITableViewController {
 //        setupNavigationStyle()
     }
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let edit = UIContextualAction(style: .normal, title: "Edit") { (action, view, editing) in
+            let editCompanyController = CreateCompanyController()
+            editCompanyController.delegate = self
+            editCompanyController.company = self.companies[indexPath.row]
+            let navController = CustomNavigationController(rootViewController: editCompanyController)
+            self.present(navController, animated: true)
+        }
+
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completion) in
+            tableView.isEditing = true
+            let context = CoreDataManager.shared.persistentContainer.viewContext
+            context.delete(self.companies[indexPath.row])
+            self.companies.remove(at: indexPath.row)
+            do {
+                try context.save()
+            } catch let err {
+                print("Failed to delete company:", err)
+            }
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+        
+        let config = UISwipeActionsConfiguration(actions: [delete, edit])
+        return config
+    }
+    
+    private func editHandlerFunction(action: UIContextualAction, view: UIView, bool: (Bool) -> (Void)) {
+        print("editing company in separate function")
+        
+      
+    }
+    
     private func fetchCompanies() {
         let context = CoreDataManager.shared.persistentContainer.viewContext
 
@@ -96,6 +132,14 @@ extension CompaniesController: CreateCompanyControllerDelegate {
         companies.append(company)
         // 2 - insert a new indexpath into tableVIew
         tableView.insertRows(at: [IndexPath(row: companies.count - 1, section: 0)], with: .automatic)
+    }
+    
+    func didEditCompany(company: Company) {
+        let row = companies.firstIndex(of: company)
+        
+        guard let forcerow = row else { return }
+        let reloadIndexPath = IndexPath(row: forcerow, section: 0)
+        tableView.reloadRows(at: [reloadIndexPath], with: .middle)
     }
 }
 

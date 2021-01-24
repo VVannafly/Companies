@@ -11,11 +11,17 @@ import CoreData
 
 protocol CreateCompanyControllerDelegate {
     func didAddCompany(company: Company)
+    func didEditCompany(company: Company)
 }
 
 class CreateCompanyController: UIViewController {
     
     var delegate: CreateCompanyControllerDelegate?
+    var company: Company? {
+        didSet {
+            nameTextField.text = company?.name
+        }
+    }
     
     let nameLabel: UILabel = {
         let label = UILabel()
@@ -37,13 +43,18 @@ class CreateCompanyController: UIViewController {
         
         setupUI()
         
-        navigationItem.title = "Create Company"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
         view.backgroundColor = UIColor.blueColor
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        // Do any additional setup after loading the view.
+        // ternary syntax
+        navigationItem.title = company == nil ? "Create Company" : "Edit Company"
+        
     }
     
     private func setupUI() {
@@ -78,8 +89,7 @@ class CreateCompanyController: UIViewController {
         dismiss(animated: true)
     }
     
-    @objc private func handleSave() {
-        
+    private func createCompany() {
         // initialization of our Core Data stack
         let context = CoreDataManager.shared.persistentContainer.viewContext
         
@@ -97,23 +107,25 @@ class CreateCompanyController: UIViewController {
         }
         
         print("Trying to save company...")
-        
+    }
     
-            
-//            let company = Company(name: name, founded: Date())
-//            self.delegate?.didAddCompany(company: company)
-
-        
-
+    @objc private func handleSave() {
+        if company == nil {
+            createCompany()
+        } else {
+            saveCompanyChanges()
+        }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    private func saveCompanyChanges() {
+        let context = CoreDataManager.shared.persistentContainer.viewContext
+        company?.name = nameTextField.text
+        do {
+            try context.save()
+            dismiss(animated: true)
+            self.delegate?.didEditCompany(company: company!)
+        } catch let error {
+            print("Failed saving changes:", error)
+        }
     }
-    */
-
 }
