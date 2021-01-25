@@ -10,11 +10,6 @@ import CoreData
 
 class CompaniesController: UITableViewController {
         var companies = [Company]()
-//    var companies = [
-//        Company(name: "Apple", founded: Date()),
-//        Company(name: "Google", founded: Date()),
-//        Company(name: "Facebook", founded: Date())
-//    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +48,7 @@ class CompaniesController: UITableViewController {
             }
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
-        
+        edit.backgroundColor = UIColor.blueColor    
         let config = UISwipeActionsConfiguration(actions: [delete, edit])
         return config
     }
@@ -70,9 +65,6 @@ class CompaniesController: UITableViewController {
         let fetchRequest = NSFetchRequest<Company>(entityName: "Company")
         do {
             let companies = try context.fetch(fetchRequest)
-            companies.forEach { (company) in
-                print(company.name ?? "")
-            }
             
             self.companies = companies
             self.tableView.reloadData()
@@ -80,15 +72,12 @@ class CompaniesController: UITableViewController {
         } catch let error {
             print("Failed to fetch companies:", error)
         }
-        
-        
     }
     
     @objc func handleAddCompany() {
-        print("Adding company ..")
+        print("Adding company...")
         
         let createCompanyController = CreateCompanyController()
-        
         
         let navController = CustomNavigationController(rootViewController: createCompanyController)
         createCompanyController.delegate = self
@@ -109,8 +98,23 @@ class CompaniesController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
         let company = companies[indexPath.row]
         cell.backgroundColor = .tealColor
-        cell.textLabel?.text = company.name
+        if let name = company.name, let founded = company.founded {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM dd, yyyy"
+            let foundedDateString = dateFormatter.string(from: founded)
+            let textString = "\(name) - Founded: \(foundedDateString)"
+            cell.textLabel?.text = textString
+        } else {
+            cell.textLabel?.text = company.name
+        }
         cell.textLabel?.textColor = .white
+        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+    
+        if let imageData = company.imageData {
+            cell.imageView?.image = UIImage(data: imageData)
+        } else {
+            cell.imageView?.image = #imageLiteral(resourceName: "select_photo_empty")
+        }
         return cell
     }
     
@@ -137,8 +141,8 @@ extension CompaniesController: CreateCompanyControllerDelegate {
     func didEditCompany(company: Company) {
         let row = companies.firstIndex(of: company)
         
-        guard let forcerow = row else { return }
-        let reloadIndexPath = IndexPath(row: forcerow, section: 0)
+        guard let forceRow = row else { return }
+        let reloadIndexPath = IndexPath(row: forceRow, section: 0)
         tableView.reloadRows(at: [reloadIndexPath], with: .middle)
     }
 }

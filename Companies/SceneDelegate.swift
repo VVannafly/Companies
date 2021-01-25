@@ -66,7 +66,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 //        CoreDataManager.shared.persistentContainer.saveContext()
     }
-
-
 }
 
+extension UINavigationController {
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+}
