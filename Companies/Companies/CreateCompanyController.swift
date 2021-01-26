@@ -74,8 +74,7 @@ class CreateCompanyController: UIViewController {
         
         setupUI()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
-        
+        setupCancelButton()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(handleSave))
         view.backgroundColor = UIColor.blueColor
     }
@@ -89,10 +88,7 @@ class CreateCompanyController: UIViewController {
     }
     
     private func setupUI() {
-        let lightBlueBackgroundView = UIView()
-        lightBlueBackgroundView.backgroundColor = UIColor.lightBlue
-        lightBlueBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(lightBlueBackgroundView)
+        let lightBlueBackgroundView = setupLightBlueBackgroundView(height: 200)
         
         view.addSubview(companyImageView)
         view.addSubview(nameLabel)
@@ -100,10 +96,6 @@ class CreateCompanyController: UIViewController {
         view.addSubview(datePicker)
         
         NSLayoutConstraint.activate([
-            lightBlueBackgroundView.topAnchor.constraint(equalTo: view.topAnchor),
-            lightBlueBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            lightBlueBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            lightBlueBackgroundView.heightAnchor.constraint(equalToConstant: 200),
             
             companyImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
             companyImageView.heightAnchor.constraint(equalToConstant: 100),
@@ -126,11 +118,6 @@ class CreateCompanyController: UIViewController {
             datePicker.bottomAnchor.constraint(equalTo: lightBlueBackgroundView.bottomAnchor)
         ])
 
-    }
-
-    
-    @objc func handleCancel() {
-        dismiss(animated: true)
     }
     
     private func createCompany() {
