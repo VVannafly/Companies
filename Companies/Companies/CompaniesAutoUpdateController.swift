@@ -38,9 +38,19 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
         
         tableView.backgroundColor = UIColor.blueColor
         tableView.register(CompanyCell.self, forCellReuseIdentifier: cellId)
-        fetchResultsController.fetchedObjects?.forEach({ (company) in
-            print(company.name ?? "")
-        })
+//        fetchResultsController.fetchedObjects?.forEach({ (company) in
+//            print(company.name ?? "")
+//        })
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        refreshControl.tintColor = .white
+        self.refreshControl = refreshControl
+    }
+    
+    @objc func handleRefresh() {
+        Service.shared.downloadCompaniesFromServer()
+        self.refreshControl?.endRefreshing()
     }
     // MARK: - NSFetchResulController Delegate
     
@@ -85,7 +95,7 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
     // Filtering from Core Data
     @objc private func handleDelete() {
         let request: NSFetchRequest<Company> = Company.fetchRequest()
-        request.predicate = NSPredicate(format: "name CONTAINS %@", "B")
+//        request.predicate = NSPredicate(format: "name CONTAINS %@", "B")
         
         let context = CoreDataManager.shared.persistentContainer.viewContext
         let companiesWithB = try? context.fetch(request)
@@ -108,6 +118,13 @@ class CompaniesAutoUpdateController: UITableViewController, NSFetchedResultsCont
         label.text = fetchResultsController.sectionIndexTitles[section]
         label.backgroundColor = UIColor.lightBlue
         return label
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let employeesListController = EmployeesController()
+        employeesListController.company = fetchResultsController.object(at: indexPath)
+        
+        navigationController?.pushViewController(employeesListController, animated: true)
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
