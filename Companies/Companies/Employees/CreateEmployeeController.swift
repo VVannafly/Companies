@@ -73,8 +73,11 @@ class CreateEmployeeController: UIViewController {
             showError(title: "Bad date", message: "Birthday date not valid")
             return
         }
-
-        let result = CoreDataManager.shared.createEmployee(employeeName: employeeName, birthday: birthdayDate, company: company)
+        
+        guard let employeeType = employeeTypeSegmentedControl.titleForSegment(at: employeeTypeSegmentedControl.selectedSegmentIndex) else { return }
+        
+        
+        let result = CoreDataManager.shared.createEmployee(employeeName: employeeName, employeeType: employeeType, birthday: birthdayDate, company: company)
         switch result {
         case .failure(let error):
             print(error)
@@ -91,12 +94,25 @@ class CreateEmployeeController: UIViewController {
         present(alertController, animated: true)
     }
     
+    let employeeTypeSegmentedControl: UISegmentedControl = {
+        
+        let types = [EmployeeType.Executive.rawValue,
+                     EmployeeType.SeniorManagement.rawValue,
+                     EmployeeType.Staff.rawValue
+        ]
+        let segmentedControl = UISegmentedControl(items: types)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.selectedSegmentIndex = 0
+        return segmentedControl
+    }()
+    
     private func setupUI() {
-        _ = setupLightBlueBackgroundView(height: 100)
+        _ = setupLightBlueBackgroundView(height: 150)
         view.addSubview(nameLabel)
         view.addSubview(nameTextField)
         view.addSubview(birthdayLabel)
         view.addSubview(birthdayTextField)
+        view.addSubview(employeeTypeSegmentedControl)
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: view.topAnchor),
@@ -118,6 +134,11 @@ class CreateEmployeeController: UIViewController {
             birthdayTextField.leftAnchor.constraint(equalTo: birthdayLabel.rightAnchor, constant: 50),
             birthdayTextField.rightAnchor.constraint(equalTo: view.rightAnchor),
             birthdayTextField.bottomAnchor.constraint(equalTo: birthdayLabel.bottomAnchor),
+            
+            employeeTypeSegmentedControl.topAnchor.constraint(equalTo: birthdayLabel.bottomAnchor),
+            employeeTypeSegmentedControl.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            employeeTypeSegmentedControl.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+            employeeTypeSegmentedControl.heightAnchor.constraint(equalToConstant: 34),
         ])
     }
     

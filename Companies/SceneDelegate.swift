@@ -42,7 +42,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func createNC() -> UINavigationController {
-        let companiesController = CompaniesController()
+//        let companiesController = CompaniesController() // CoreData fetchRequests
+        let companiesController = CompaniesAutoUpdateController()
         return CustomNavigationController(rootViewController: companiesController)
     }
     

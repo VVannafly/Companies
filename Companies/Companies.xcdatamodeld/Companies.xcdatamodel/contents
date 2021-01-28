@@ -15,6 +15,7 @@
     <entity name="Employee" representedClassName="Employee" syncable="YES" codeGenerationType="class">
         <attribute name="birthday" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
         <relationship name="address" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Address" inverseName="employee" inverseEntity="Address"/>
         <relationship name="company" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Company" inverseName="employees" inverseEntity="Company"/>
         <relationship name="employeeInformation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EmployeeInformation" inverseName="employee" inverseEntity="EmployeeInformation"/>
@@ -27,7 +28,7 @@
     <elements>
         <element name="Address" positionX="169.9921875" positionY="-15.25" width="128" height="103"/>
         <element name="Company" positionX="-283.1796875" positionY="-86.5703125" width="128" height="103"/>
-        <element name="Employee" positionX="-44.07421875" positionY="44.05078125" width="128" height="118"/>
+        <element name="Employee" positionX="-44.07421875" positionY="44.05078125" width="128" height="133"/>
         <element name="EmployeeInformation" positionX="167.80859375" positionY="154.5859375" width="128" height="88"/>
     </elements>
 </model>

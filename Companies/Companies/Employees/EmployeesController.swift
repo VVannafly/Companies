@@ -8,10 +8,18 @@
 import UIKit
 import CoreData
 
+class IndentedLabel: UILabel {
+    override func drawText(in rect: CGRect) {
+        let insets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        let customRect = rect.inset(by: insets)
+        super.drawText(in: customRect)
+    }
+}
+
 class EmployeesController: UITableViewController {
     
     var company: Company?
-    var employees = [Employee]()
+//    var employees = [Employee]()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -27,13 +35,39 @@ class EmployeesController: UITableViewController {
         fetchEmployees()
     }
     
+    var allEmployees = [[Employee]]()
+    var employeeTypes = [
+        EmployeeType.Executive.rawValue,
+        EmployeeType.SeniorManagement.rawValue,
+        EmployeeType.Staff.rawValue
+    ]
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return employees.count
+        return allEmployees[section].count
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return allEmployees.count
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = IndentedLabel()
+        label.text = employeeTypes[section]
+        label.textColor = UIColor.blueColor
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.backgroundColor = UIColor.lightBlue
+        return label
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeCell", for: indexPath)
-        let employee = employees[indexPath.row]
+        
+        let employee = allEmployees[indexPath.section][indexPath.row]
+//        let employee = employees[indexPath.row]
         cell.textLabel?.text = employee.name
         
         let dateFormatter = DateFormatter()
@@ -50,16 +84,10 @@ class EmployeesController: UITableViewController {
     
     private func fetchEmployees() {
         guard let companyEmployees = company?.employees?.allObjects as? [Employee] else { return }
-        
-        self.employees = companyEmployees
-        //        let context = CoreDataManager.shared.persistentContainer.viewContext
-        //        let request = NSFetchRequest<Employee>(entityName: "Employee")
-        //        do {
-        //            let employees = try context.fetch(request)
-        //            self.employees = employees
-        //        } catch let err {
-        //            print("Failed to fetch employees:", err)
-        //        }
+        allEmployees = []
+        employeeTypes.forEach { employeeType in
+            allEmployees.append(companyEmployees.filter{$0.type == employeeType})
+        }
     }
     
     @objc private func handleAdd() {
@@ -75,7 +103,10 @@ class EmployeesController: UITableViewController {
 
 extension EmployeesController: CreateEmployeeControllerDelegate {
     func didAddEmployee(employee: Employee) {
-        employees.append(employee)
-        tableView.reloadData()
+        guard let section = employeeTypes.firstIndex(of: employee.type!) else { return }
+        let row = allEmployees[section].count
+        let insertionIndexPath = IndexPath(row: row, section: section)
+        allEmployees[section].append(employee)
+        tableView.insertRows(at: [insertionIndexPath], with: .middle)
     }
 }

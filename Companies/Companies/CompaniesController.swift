@@ -20,6 +20,7 @@ class CompaniesController: UITableViewController {
         navigationItem.title = "Companies"
         setUpTableView()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(handleReset))
+        
         setupPlusButtonInNavBar(selector: #selector(handleAddCompany))
     }
     
